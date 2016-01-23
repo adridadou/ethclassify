@@ -22,7 +22,7 @@
     "images/": "images/"
   },
   "deploy": [
-    "MetaCoin"
+    "Document"
   ],
   "rpc": {
     "host": "localhost",
