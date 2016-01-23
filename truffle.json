@@ -1,8 +1,20 @@
 {
   "build": {
     "index.html": "index.html",
+    "publish.html": "publish.html",
     "app.js": [
-      "javascripts/app.js"
+      "javascripts/app.js",
+      "javascripts/init.js",
+      "javascripts/file.js",
+      "javascripts/crypto.js",
+      "javascripts/ipfsapi.js",
+      "javascripts/ipfs.js"
+    ],
+    "buffer.js" : [
+      "javascripts/buffer.js"
+    ],
+    "require.js" : [
+      "javascripts/require.js"
     ],
     "app.css": [
       "stylesheets/app.css"
