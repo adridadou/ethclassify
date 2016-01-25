@@ -1,4 +1,4 @@
-var reader, symKeyPromise;
+var reader, symKeyPromise, fileName;
 
 function abortRead() {
   if(reader) {
@@ -44,7 +44,7 @@ function encryptFile(symKey) {
     encryptPromise.then(
         function(result){
           message('encryption done!');
-          uploadFile(result);
+          uploadFile(result, publishFile);
         }, 
         function(e){
             message(e.message);
@@ -61,11 +61,16 @@ function processFile(file){
 
     initReader(progress);
     // Read in the image file as a binary string.
+    fileName = file.name;
     reader.readAsArrayBuffer(file);
     message('reading file ...');
     symKeyPromise = generateSymKey();
     document.getElementById('abort').className='button-active';
 
+}
+
+function publishFile(hash) {
+    Document.new(hash,fileName);
 }
 
 

@@ -1,10 +1,6 @@
-function uploadFile(result) {
+function uploadFile(result, callback) {
 	ipfs.add(new Buffer(result), function(err, res) {
     	if(err || !res) return console.error(err);
-    	console.log(res.Hash);
-    	console.log(res.Name);
-
-    	//create smart contract
-    	
+    	callback(res.Hash);
 	});
 }

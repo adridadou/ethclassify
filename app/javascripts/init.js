@@ -8,8 +8,10 @@ function initFileAPI() {
 
 function initDropzone() {
     var dropZone = document.getElementById('dropzone');
-    dropZone.addEventListener('dragover', handleDragOver, false);
-    dropZone.addEventListener('drop', handleFileSelect, false);
+    if(dropZone !== null) {
+        dropZone.addEventListener('dragover', handleDragOver, false);
+        dropZone.addEventListener('drop', handleFileSelect, false);
+    }
 }
 
 function initCrypto() {

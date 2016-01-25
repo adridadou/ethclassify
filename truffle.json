@@ -2,13 +2,15 @@
   "build": {
     "index.html": "index.html",
     "publish.html": "publish.html",
+    "access.html": "access.html",
     "app.js": [
       "javascripts/app.js",
       "javascripts/init.js",
       "javascripts/file.js",
       "javascripts/crypto.js",
       "javascripts/ipfsapi.js",
-      "javascripts/ipfs.js"
+      "javascripts/ipfs.js",
+      "javascripts/request.js"
     ],
     "buffer.js" : [
       "javascripts/buffer.js"
@@ -22,7 +24,7 @@
     "images/": "images/"
   },
   "deploy": [
-    "Document"
+    "DocumentManager"
   ],
   "rpc": {
     "host": "localhost",

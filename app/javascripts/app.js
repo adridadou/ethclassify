@@ -5,6 +5,7 @@ window.onload = function() {
   initIpfs();
   initRequireJs();
   initWeb3();
+  setTimeout(handleRequest,2000);
 }
 
 function message(msg) {
