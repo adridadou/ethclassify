@@ -1,5 +1,6 @@
 contract('Document', function(accounts) {
   it("should set the owner as the caller", function(done) {
+    testme();
     var account = accounts[0],
     ipfs = 'ipfsAddress';
     Document.new(ipfs).then(function(doc){

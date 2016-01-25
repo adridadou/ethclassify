@@ -5752,4 +5752,4 @@ if (typeof web3 !== 'undefined') {
 }
 
 Pudding.setWeb3(window.web3);
-Pudding.load([MetaCoin, PublishedDocument], window);
+Pudding.load([Document], window);

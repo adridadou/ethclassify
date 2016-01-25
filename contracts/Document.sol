@@ -2,6 +2,7 @@ contract Document {
 	address public owner;
 	string public document;
 	uint public nbRequests;
+    string public privateKey;
 	mapping (uint => Request) requests;
 
 
