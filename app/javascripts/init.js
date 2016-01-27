@@ -44,6 +44,7 @@ function initWeb3(){
 
     accounts = accs;
     account = accounts[0];
+    //TODO: make it possible to chose with which account you are working
     document.getElementById('balance').textContent = web3.fromWei(web3.eth.getBalance(account)) + ' ETH';
   });
 }

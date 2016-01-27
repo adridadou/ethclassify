@@ -21,6 +21,7 @@ function initReader(progress) {
     progress.textContent = '100%';
     transitToStep2();
     message('wait for the key to be generated ...');
+    document.getElementById('documentId').textContent = 'wait for the transaction to be mined ...';
     symKeyPromise.then(encryptFile);
   }
 }
@@ -44,7 +45,9 @@ function encryptFile(symKey) {
     encryptPromise.then(
         function(result){
           message('encryption done!');
-          uploadFile(result, publishFile);
+          uploadFile(result, function(hash) {
+            publishFile(hash,symKey);
+          });
         }, 
         function(e){
             message(e.message);
@@ -69,8 +72,26 @@ function processFile(file){
 
 }
 
-function publishFile(hash) {
-    Document.new(hash,fileName);
+function publishFile(hash, symKey) {
+  exportKey(symKey).then(function(value) {
+    localStorage.setItem(hash, value);  
+  });
+    
+  console.log('publishing ' + fileName);
+  DocumentManager.deployed().newDocument(hash,fileName, 0,{from: account}).then(function(tx){
+      var filter = web3.eth.filter('latest');
+      filter.watch(function(error, result) {
+          var receipt = web3.eth.getTransactionReceipt(tx);
+          // XXX should probably only wait max 2 events before failing XXX 
+          if (receipt && receipt.transactionHash == tx) {
+              DocumentManager.deployed().nbDocuments.call().then(function(docId){
+                document.getElementById('documentId').textContent = 'Done! your document id is: ' + docId;
+              });
+              
+              filter.stopWatching();
+          }
+      });
+  });
 }
 
 

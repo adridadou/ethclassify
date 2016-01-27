@@ -5399,35 +5399,35 @@ var factory = function factory(Pudding) {
   // the easiest way to extend a Babel-based class. Note that the
   // resulting .js file does not have a dependency on Babel.
 
-  var Document = (function (_Pudding) {
-    _inherits(Document, _Pudding);
+  var DocumentManager = (function (_Pudding) {
+    _inherits(DocumentManager, _Pudding);
 
-    function Document() {
-      _classCallCheck(this, Document);
+    function DocumentManager() {
+      _classCallCheck(this, DocumentManager);
 
-      _get(Object.getPrototypeOf(Document.prototype), "constructor", this).apply(this, arguments);
+      _get(Object.getPrototypeOf(DocumentManager.prototype), "constructor", this).apply(this, arguments);
     }
 
-    return Document;
+    return DocumentManager;
   })(Pudding);
 
   ;
 
   // Set up specific data for this class.
-  Document.abi = [{ "constant": true, "inputs": [], "name": "name", "outputs": [{ "name": "", "type": "string" }], "type": "function" }, { "constant": false, "inputs": [], "name": "requestDocument", "outputs": [{ "name": "nb", "type": "uint256" }], "type": "function" }, { "constant": true, "inputs": [], "name": "document", "outputs": [{ "name": "", "type": "string" }], "type": "function" }, { "constant": true, "inputs": [], "name": "nbRequests", "outputs": [{ "name": "", "type": "uint256" }], "type": "function" }, { "constant": true, "inputs": [], "name": "privateKey", "outputs": [{ "name": "", "type": "string" }], "type": "function" }, { "constant": false, "inputs": [], "name": "destroyThis", "outputs": [], "type": "function" }, { "constant": false, "inputs": [{ "name": "requestId", "type": "uint256" }], "name": "getRequestOwner", "outputs": [{ "name": "_owner", "type": "address" }], "type": "function" }, { "constant": true, "inputs": [], "name": "owner", "outputs": [{ "name": "", "type": "address" }], "type": "function" }, { "inputs": [{ "name": "ipfs", "type": "string" }, { "name": "n", "type": "string" }], "type": "constructor" }];
-  Document.binary = "6060604052604051610470380380610470833981016040528051608051908201910160008054600160a060020a0319163317815582516001805492819052916020600282851615610100026000190190921691909104601f9081018290047fb10e2d527612073b26eecdfd717e6a320cf44b4afac2b0732d9fcbe2b7fa0cf690810193929091908701908390106100cb57805160ff19168380011785555b506100fb9291505b8082111561015457600081556001016100a5565b505050506102e8806101886000396000f35b8280016001018555821561009d579182015b8281111561009d5782518260005055916020019190600101906100dd565b50508060026000509080519060200190828054600181600116156101000203166002900490600052602060002090601f016020900481019282601f1061015857805160ff19168380011785555b506100b99291506100a5565b5090565b82800160010185558215610148579182015b8281111561014857825182600050559160200191906001019061016a566060604052361561006c5760e060020a600035046306fdde03811461006e5780631325070f146100c85780631f4339d81461010a5780631ff9e1781461016657806349da5a0f1461016f5780635e589bf7146101cb5780638611cb67146101e85780638da5cb5b14610222575b005b61023460028054602060018216156101000260001901909116829004601f810182900490910260809081016040526060828152929190828280156102e05780601f106102b5576101008083540402835291602001916102e0565b600380546001018082556000908152600560205260409020805474ffffffffffffffffffffffffffffffffffffffffff191633179055545b6060908152602090f35b610234600180546020600282841615610100026000190190921691909104601f810182900490910260809081016040526060828152929190828280156102e05780601f106102b5576101008083540402835291602001916102e0565b61010060035481565b610234600480546020601f600260001960018516156101000201909316929092049182018190040260809081016040526060828152929190828280156102e05780601f106102b5576101008083540402835291602001916102e0565b61006c60005433600160a060020a03908116911614156101e6575b565b6102a26004356000805433600160a060020a039081169116141561021d5781815260056020526040902054600160a060020a03165b919050565b6102a2600054600160a060020a031681565b60405180806020018281038252838181518152602001915080519060200190808383829060006004602084601f0104600302600f01f150905090810190601f1680156102945780820380516001836020036101000a031916815260200191505b509250505060405180910390f35b600160a060020a03166060908152602090f35b820191906000526020600020905b8154815290600101906020018083116102c357829003601f168201915b50505050508156";
+  DocumentManager.abi = [{ "constant": false, "inputs": [{ "name": "documentId", "type": "uint256" }, { "name": "requestId", "type": "uint256" }], "name": "getOpenRequestPublicKey", "outputs": [{ "name": "key", "type": "string" }], "type": "function" }, { "constant": false, "inputs": [{ "name": "hash", "type": "string" }, { "name": "name", "type": "string" }], "name": "newDocument", "outputs": [{ "name": "nb", "type": "uint256" }], "type": "function" }, { "constant": false, "inputs": [{ "name": "documentId", "type": "uint256" }, { "name": "requestId", "type": "uint256" }], "name": "getRequestOwner", "outputs": [{ "name": "addr", "type": "address" }], "type": "function" }, { "constant": false, "inputs": [{ "name": "documentId", "type": "uint256" }], "name": "getDocument", "outputs": [{ "name": "hash", "type": "string" }], "type": "function" }, { "constant": false, "inputs": [{ "name": "documentId", "type": "uint256" }, { "name": "requestId", "type": "uint256" }], "name": "getEncryptedKeyFromRequest", "outputs": [{ "name": "name", "type": "string" }], "type": "function" }, { "constant": false, "inputs": [{ "name": "documentId", "type": "uint256" }], "name": "getDocumentHash", "outputs": [{ "name": "", "type": "string" }], "type": "function" }, { "constant": false, "inputs": [{ "name": "documentId", "type": "uint256" }, { "name": "requestId", "type": "uint256" }, { "name": "encryptedKey", "type": "string" }], "name": "grantAccess", "outputs": [], "type": "function" }, { "constant": true, "inputs": [], "name": "owner", "outputs": [{ "name": "", "type": "address" }], "type": "function" }, { "constant": false, "inputs": [{ "name": "documentId", "type": "uint256" }], "name": "getLastRequestId", "outputs": [{ "name": "id", "type": "uint256" }], "type": "function" }, { "constant": true, "inputs": [], "name": "nbDocuments", "outputs": [{ "name": "", "type": "uint256" }], "type": "function" }, { "constant": false, "inputs": [{ "name": "documentId", "type": "uint256" }, { "name": "publicKey", "type": "string" }], "name": "requestDocument", "outputs": [{ "name": "nb", "type": "uint256" }], "type": "function" }, { "constant": false, "inputs": [{ "name": "documentId", "type": "uint256" }, { "name": "requestId", "type": "uint256" }], "name": "getRequestStatus", "outputs": [{ "name": "", "type": "uint8" }], "type": "function" }, { "constant": false, "inputs": [{ "name": "documentId", "type": "uint256" }], "name": "getDocumentName", "outputs": [{ "name": "name", "type": "string" }], "type": "function" }, { "constant": false, "inputs": [{ "name": "documentId", "type": "uint256" }, { "name": "requestId", "type": "uint256" }], "name": "denyAccess", "outputs": [], "type": "function" }, { "inputs": [], "type": "constructor" }];
+  DocumentManager.binary = "606060405260028054600160a060020a031916331790556109ac806100246000396000f3606060405236156100ae5760e060020a60003504630fa7a79881146100b05780631a1486441461014f57806336a31de5146102715780633f9b250a146102bf5780636efe39a3146103375780638796ec86146102bf5780638d10215e146103d65780638da5cb5b146104d55780639152f0b2146104e757806399dc8dbd14610521578063a6b2df9b1461052a578063be9a9a2814610620578063c6b547e614610655578063d3f40a02146106cf575b005b6107396004356024356040805160208181018352600080835285815280825283812085825260050190915291909120805460a060020a900460ff16600114156109255760018181018054604080516020600295841615610100026000190190931694909404601f8101839004830285018301909152808452908301828280156109695780601f1061093e57610100808354040283529160200191610969565b6040805160206004803580820135601f81018490048402850184019095528484526107a7949193602493909291840191908190840183828082843750506040805160208835808b0135601f8101839004830284018301909452838352979998604498929750919091019450909250829150840183828082843750949650505050505050600180548101808255600090815260208181526040808320805473ffffffffffffffffffffffffffffffffffffffff1916331790558354835282208551908401805481855283852094959194600292821615610100026000190190911691909104601f9081018490048201938801908390106107d657805160ff19168380011785555b506108069291505b8082111561086e576000815560010161025d565b6107b960043560243560008281526020819052604081208054600160a060020a03908116339190911614156109375782825260058101602052604090912054600160a060020a031690610937565b6107396004356040805160208181018352600080835284815280825283902083516001918201805460029381161561010002600019011692909204601f8101849004840282018401909552848152929390918301828280156109a05780601f10610975576101008083540402835291602001916109a0565b6107396004356024356040805160208181018352600080835285815280825283812085825260050190915291909120805460a060020a900460ff16600214156109255760018181018054604080516020600295841615610100026000190190931694909404601f8101839004830285018301909152808452908301828280156109695780601f1061093e57610100808354040283529160200191610969565b604080516020604435600481810135601f81018490048402850184019095528484526100ae94813594602480359593946064949293910191819084018382808284375094965050505050505060008381526020819052604090208054600160a060020a03908116339190911614156108b157600083815260058201602090815260408220805460a060020a60ff0219167402000000000000000000000000000000000000000017815584516001918201805481865294849020909460029381161561010002600019011692909204601f9081018490048301939192918701908390106108b757805160ff19168380011785555b506108ae92915061025d565b6107b9600254600160a060020a031681565b6107a760043560008181526020819052604081208054600160a060020a039081163391909116141561051b57600381015491505b50919050565b6107a760015481565b60408051602060248035600481810135601f81018590048502860185019096528585526107a79581359591946044949293909201918190840183828082843750949650505050505050600082815260208181526040808320600381018054600190810191829055908552600582018452918420805460a060020a60ff02191660a060020a1773ffffffffffffffffffffffffffffffffffffffff19163317815585518184018054818852868820949693959194600292821615610100026000190190911691909104601f9081018490048201938901908390106108e757805160ff19168380011785555b5061091792915061025d565b6107a760043560243560008281526020818152604080832084845260050190915290205460a060020a900460ff165b92915050565b610739600435604080516020818101835260008083528481528082528390206002908101805485516001821615610100026000190190911692909204601f810184900484028301840190955284825292939092918301828280156109a05780601f10610975576101008083540402835291602001916109a0565b6100ae60043560243560008281526020819052604090208054600160a060020a03908116339190911614156107345760008281526005820160205260409020805460a060020a60ff021916740300000000000000000000000000000000000000001790555b505050565b60405180806020018281038252838181518152602001915080519060200190808383829060006004602084601f0104600302600f01f150905090810190601f1680156107995780820380516001836020036101000a031916815260200191505b509250505060405180910390f35b60408051918252519081900360200190f35b60408051600160a060020a03929092168252519081900360200190f35b82800160010185558215610255579182015b828111156102555782518260005055916020019190600101906107e8565b5050600180546000908152602081815260408220855160029182018054818652948490209095851615610100026000190190941691909104601f908101839004840193919287019083901061087257805160ff19168380011785555b506108a292915061025d565b5090565b82800160010185558215610862579182015b82811115610862578251826000505591602001919060010190610884565b5050600154905061064f565b50505b50505050565b828001600101855582156104c9579182015b828111156104c95782518260005055916020019190600101906108c9565b82800160010185558215610614579182015b828111156106145782518260005055916020019190600101906108f9565b505050600301549392505050565b60408051602081019091526000815291505b5092915050565b820191906000526020600020905b81548152906001019060200180831161094c57829003601f168201915b50505050509150610937565b820191906000526020600020905b81548152906001019060200180831161098357829003601f168201915b5050505050905091905056";
 
-  if ("0x61e7f370fa3e0370e0c9f25b9da55a82e6adfeab" != "") {
-    Document.address = "0x61e7f370fa3e0370e0c9f25b9da55a82e6adfeab";
+  if ("0x8571dd94a6bd5472ba5ba340e71c65d975e8e9ca" != "") {
+    DocumentManager.address = "0x8571dd94a6bd5472ba5ba340e71c65d975e8e9ca";
 
     // Backward compatibility; Deprecated.
-    Document.deployed_address = "0x61e7f370fa3e0370e0c9f25b9da55a82e6adfeab";
+    DocumentManager.deployed_address = "0x8571dd94a6bd5472ba5ba340e71c65d975e8e9ca";
   }
 
-  Document.generated_with = "1.0.3";
-  Document.contract_name = "Document";
+  DocumentManager.generated_with = "1.0.3";
+  DocumentManager.contract_name = "DocumentManager";
 
-  return Document;
+  return DocumentManager;
 };
 
 // Nicety for Node.
@@ -5438,7 +5438,7 @@ if (typeof module != "undefined") {
 } else {
   // There will only be one version of Pudding in the browser,
   // and we can use that.
-  window.Document = factory;
+  window.DocumentManager = factory;
 };
 
 ;
@@ -5452,7 +5452,7 @@ window.onload = function() {
   initIpfs();
   initRequireJs();
   initWeb3();
-  setTimeout(handleRequest,2000);
+  setTimeout(handleRequests,1000);
 }
 
 function message(msg) {
@@ -5506,6 +5506,7 @@ function initWeb3(){
 
     accounts = accs;
     account = accounts[0];
+    //TODO: make it possible to chose with which account you are working
     document.getElementById('balance').textContent = web3.fromWei(web3.eth.getBalance(account)) + ' ETH';
   });
 }
@@ -5550,6 +5551,7 @@ function initReader(progress) {
     progress.textContent = '100%';
     transitToStep2();
     message('wait for the key to be generated ...');
+    document.getElementById('documentId').textContent = 'wait for the transaction to be mined ...';
     symKeyPromise.then(encryptFile);
   }
 }
@@ -5573,7 +5575,9 @@ function encryptFile(symKey) {
     encryptPromise.then(
         function(result){
           message('encryption done!');
-          uploadFile(result, publishFile);
+          uploadFile(result, function(hash) {
+            publishFile(hash,symKey);
+          });
         }, 
         function(e){
             message(e.message);
@@ -5598,8 +5602,26 @@ function processFile(file){
 
 }
 
-function publishFile(hash) {
-    Document.new(hash,fileName);
+function publishFile(hash, symKey) {
+  exportKey(symKey).then(function(value) {
+    localStorage.setItem(hash, value);  
+  });
+    
+  console.log('publishing ' + fileName);
+  DocumentManager.deployed().newDocument(hash,fileName, 0,{from: account}).then(function(tx){
+      var filter = web3.eth.filter('latest');
+      filter.watch(function(error, result) {
+          var receipt = web3.eth.getTransactionReceipt(tx);
+          // XXX should probably only wait max 2 events before failing XXX 
+          if (receipt && receipt.transactionHash == tx) {
+              DocumentManager.deployed().nbDocuments.call().then(function(docId){
+                document.getElementById('documentId').textContent = 'Done! your document id is: ' + docId;
+              });
+              
+              filter.stopWatching();
+          }
+      });
+  });
 }
 
 
@@ -5639,13 +5661,86 @@ function updateProgress(evt) {
     }
 }
 
+
 function generateSymKey(){
-	return crypto.subtle.generateKey({name: "AES-CBC", length: 128}, false, ["encrypt", "decrypt"])
+	return crypto.subtle.generateKey({name: "AES-CBC", length: 128}, true, ["encrypt", "decrypt"])
 	.catch(function(){
 		message('error while generating AES-CBC key');
 	});
 }
 
+function generateAsymKey() {
+    return crypto.subtle.generateKey({
+    	name: "RSA-OAEP", 
+    	modulusLength: 2048,
+    	publicExponent: 
+    	new Uint8Array([0x01, 0x00, 0x01]), hash: {name: "SHA-256"}}, true, ["encrypt", "decrypt"]
+    );
+}
+
+function encryptSymKey(publicKey, key) {
+    var vector = crypto.getRandomValues(new Uint8Array(16));
+    return crypto.subtle.encrypt({name: "RSA-OAEP", iv: vector}, publicKey, convertStringToArrayBufferView(key)).then(
+        function(result){
+            return convertArrayBufferViewtoString(new Uint8Array(result));
+        }
+    );
+}
+
+function convertArrayBufferViewtoString(buffer)
+{
+    var str = "";
+    for (var iii = 0; iii < buffer.byteLength; iii++) 
+    {
+        str += String.fromCharCode(buffer[iii]);
+    }
+
+    return str;
+}
+
+function convertStringToArrayBufferView(str)
+{
+    var bytes = new Uint8Array(str.length);
+    for (var iii = 0; iii < str.length; iii++) 
+    {
+        bytes[iii] = str.charCodeAt(iii);
+    }
+
+    return bytes;
+}
+
+function exportKey(key) {
+    return crypto.subtle.exportKey("jwk", key).then(function(result) {
+        return JSON.stringify(result);
+    });
+}
+
+function importAsymPublicKey(strKey) {
+    var key = JSON.parse(strKey);
+    return crypto.subtle.importKey("jwk", key, {
+        name: "RSA-OAEP", 
+        modulusLength: 2048, 
+        publicExponent: new Uint8Array([0x01, 0x00, 0x01]), 
+        hash: {name: "SHA-256"}}, true, ["encrypt"]);
+}
+
+function importAsymPrivateKey(strKey) {
+    var key = JSON.parse(strKey);
+    return crypto.subtle.importKey("jwk", key, {
+        name: "RSA-OAEP", 
+        modulusLength: 2048, 
+        publicExponent: new Uint8Array([0x01, 0x00, 0x01]), 
+        hash: {name: "SHA-256"}}, true, ["decrypt"]);
+}
+
+function importSymKey(strKey) {
+    var key = JSON.parse(strKey);
+    return crypto.subtle.importKey("jwk", key, {
+        name: "AES-CBC", 
+        modulusLength: 128, 
+        publicExponent: new Uint8Array([0x01, 0x00, 0x01]), 
+        hash: {name: "SHA-256"}}, true, ["encrypt", "decrypt"]);
+}
 
 
 var ipfsAPI=function(modules){function __webpack_require__(moduleId){if(installedModules[moduleId])return installedModules[moduleId].exports;var module=installedModules[moduleId]={exports:{},id:moduleId,loaded:!1};return modules[moduleId].call(module.exports,module,module.exports,__webpack_require__),module.loaded=!0,module.exports}var installedModules={};return __webpack_require__.m=modules,__webpack_require__.c=installedModules,__webpack_require__.p="/_karma_webpack_//",__webpack_require__(0)}([function(module,exports,__webpack_require__){(function(Buffer){"use strict";function _interopRequireDefault(obj){return obj&&obj.__esModule?obj:{"default":obj}}function IpfsAPI(host_or_multiaddr,port,opts){var config=getConfig();try{var maddr=multiaddr(host_or_multiaddr).nodeAddress();config.host=maddr.address,config.port=maddr.port}catch(e){"string"==typeof host_or_multiaddr&&(config.host=host_or_multiaddr,config.port=port&&"object"!==("undefined"==typeof port?"undefined":(0,_typeof3["default"])(port))?port:config.port)}for(var lastIndex=arguments.length;!opts&&lastIndex-- >0&&!(opts=arguments[lastIndex]););if((0,_assign2["default"])(config,opts),!config.host&&"undefined"!=typeof window){var split=window.location.host.split(":");config.host=split[0],config.port=split[1]}var requestAPI=getRequestAPI(config),cmds=loadCommands(requestAPI);return cmds.send=requestAPI,cmds.Buffer=Buffer,cmds}var _assign=__webpack_require__(123),_assign2=_interopRequireDefault(_assign),_typeof2=__webpack_require__(22),_typeof3=_interopRequireDefault(_typeof2),multiaddr=__webpack_require__(207),loadCommands=__webpack_require__(120),getConfig=__webpack_require__(118),getRequestAPI=__webpack_require__(121);exports=module.exports=IpfsAPI}).call(exports,__webpack_require__(2).Buffer)},function(module,exports){function cleanUpNextTick(){draining=!1,currentQueue.length?queue=currentQueue.concat(queue):queueIndex=-1,queue.length&&drainQueue()}function drainQueue(){if(!draining){var timeout=setTimeout(cleanUpNextTick);draining=!0;for(var len=queue.length;len;){for(currentQueue=queue,queue=[];++queueIndex<len;)currentQueue&&currentQueue[queueIndex].run();queueIndex=-1,len=queue.length}currentQueue=null,draining=!1,clearTimeout(timeout)}}function Item(fun,array){this.fun=fun,this.array=array}function noop(){}var currentQueue,process=module.exports={},queue=[],draining=!1,queueIndex=-1;process.nextTick=function(fun){var args=new Array(arguments.length-1);if(arguments.length>1)for(var i=1;i<arguments.length;i++)args[i-1]=arguments[i];queue.push(new Item(fun,args)),1!==queue.length||draining||setTimeout(drainQueue,0)},Item.prototype.run=function(){this.fun.apply(null,this.array)},process.title="browser",process.browser=!0,process.env={},process.argv=[],process.version="",process.versions={},process.on=noop,process.addListener=noop,process.once=noop,process.off=noop,process.removeListener=noop,process.removeAllListeners=noop,process.emit=noop,process.binding=function(name){throw new Error("process.binding is not supported")},process.cwd=function(){return"/"},process.chdir=function(dir){throw new Error("process.chdir is not supported")},process.umask=function(){return 0}},function(module,exports,__webpack_require__){(function(Buffer,global){/*!
@@ -5690,8 +5785,177 @@ function uploadFile(result, callback) {
 	});
 }
 
-function handleRequest(){
-	
+function requestAccess() {
+	generateAsymKey().then(handleAccessRequest);
+}
+
+function handleAccessRequest(key){
+	var docMgr = DocumentManager.deployed();
+	var documentId = parseInt(document.getElementById('documentId').value);
+	exportKey(key.publicKey).then(function(strPublicKey){
+		return docMgr.requestDocument(documentId,strPublicKey, 0, {from:account}).then(function(tx){
+			console.log('transaction sent!' + tx);
+	        var filter = web3.eth.filter('latest');
+	        filter.watch(function(error, result) {
+	            var receipt = web3.eth.getTransactionReceipt(tx);
+	            // XXX should probably only wait max 2 events before failing XXX 
+	            if (receipt && receipt.transactionHash == tx) {
+	                docMgr.requestDocument.call(documentId, strPublicKey).then(function(requestId){
+	                  var requests = localStorage.getItem('requests');
+	                  if(!requests || requests === '') {
+	                  	requests = [];
+	                  }else {
+	                  	requests = JSON.parse(requests);
+	                  }
+	                  exportKey(key.privateKey).then(function(strPrivateKey){
+						requests.push({
+		                  	documentId: documentId,
+		                  	requestId: requestId - 1,
+		                  	privateKey: strPrivateKey
+	                  	});
+	                	localStorage.setItem('requests', JSON.stringify(requests));
+	                	location.reload();
+	                  });
+	                });
+	                
+	                filter.stopWatching();
+	            }
+	        });
+	    });
+	});
+}
+
+function listRequests() {
+	var requests = JSON.parse(localStorage.getItem('requests'));
+	if(requests) {
+		var html = '<table class="requestTable"><tr><th>document id</th><th>request id</th><th>status</th></tr>';
+		requests.forEach(function(request, index) {
+			html = html + '<tr onclick="openRequest(' + index + ')"><td>' + request.documentId + '</td><td>' + request.requestId + '</td><td>unknown</td></tr>';
+		});
+
+		html = html + '</table>';
+		console.log(html);
+		document.getElementById('requests').innerHTML = html;
+	}
+}
+
+function handleRequests(){
+	console.log('handling new requests');
+	for(var i = 1; i < 3; i++) {
+		handleOpenRequests(i);
+	}
+
+	setTimeout(handleRequests,2000);
+}
+
+function handleOpenRequests(documentId) {
+	var docMgr = DocumentManager.deployed();
+	docMgr.getLastRequestId.call(documentId).then(function(lastRequestId) {
+		//promise recursion
+		handleRequest(documentId, lastRequestId).then(function() {
+			return handleRequest(documentId, lastRequestId - 1);
+		});
+	});
+}
+
+function openRequest(index) {
+	console.log('try to open the document');
+	var request = JSON.parse(localStorage.getItem('requests'))[index];
+	var documentId = request.documentId;
+	var requestId = request.requestId 
+	var strPrivateKey = request.privateKey;
+	var docMgr = DocumentManager.deployed();
+	docMgr.getEncryptedKeyFromRequest.call(documentId, requestId).then(function(key) {
+		if(key === '') {
+			message('the request is either open or denied!');
+		}else {
+			var vector = crypto.getRandomValues(new Uint8Array(16));
+			docMgr.getDocumentHash.call(documentId).then(function(hash) {
+				var strKey = localStorage.getItem(hash);
+				importAsymPrivateKey(strPrivateKey).then(function(privateKey){
+					
+					crypto.subtle.decrypt({name: "RSA-OAEP", iv: vector}, privateKey, convertStringToArrayBufferView(key)).then(
+				        function(result){
+				        	console.log('import sym key');
+				        	importSymKey(convertArrayBufferViewtoString(new Uint8Array(result))).then(function(symKey) {
+				        		ipfs.cat(hash, function(err, res) {
+								    if(err || !res) return console.error(err)
+								    if(res.readable) {
+								        // Returned as a stream
+								        var decryptPromise = crypto.subtle.decrypt({name: "AES-CBC", iv: vector}, symKey, reader.result);
+
+									    decryptPromise.then(
+									        function(result){
+									          message('decryption done!');
+									          console.log(result);
+									        }
+									    );
+								    }
+								})
+				        	});
+				        },
+				        function(e){
+				            message('error:' + e.name);
+				        }
+				    );
+				});
+			});
+			
+		}
+	});
+}
+
+function handleRequest(documentId, requestId) {
+	if(requestId < 0) return null;
+	var docMgr = DocumentManager.deployed();
+	return docMgr.getOpenRequestPublicKey.call(documentId, requestId).then(function(key) {
+		if(key && key !== '') {
+			//check if he has access
+			return docMgr.getDocument.call(documentId, requestId).then(function(hash){
+				return checkAccess(documentId,requestId, hash, key).then(function(){
+					return handleRequest(documentId, requestId - 1);
+				});
+			});
+		}
+	})
+}
+
+function checkAccess(documentId, requestId, hash, key) {
+	console.log('check access');
+	var docMgr = DocumentManager.deployed();
+	return docMgr.getRequestOwner.call(documentId, requestId).then(function(owner){
+		if(hasAccess(owner)) {
+			//TODO: encrypt key with publicKey, not hash!!
+			var symKey = localStorage.getItem(hash);
+			console.log('encrypt the sym key!' + symKey + ' for hash ' + hash);
+			if(symKey !== null) {
+				importAsymPublicKey(key).then(function(publicKey) {
+					encryptSymKey(publicKey, symKey).then(function(encKey) {
+						console.log('access granted!');
+						docMgr.grantAccess(documentId,requestId,encKey, 0,{from: account});
+					});
+				});
+			}
+		}else {
+			console.log('access denied!');
+			docMgr.denyAccess(documentId,requestId, 0,{from: account});
+		}
+	})
+}
+
+function hasAccess(account) {
+	return true;
+}
+
+function getDocumentDetails() {
+	var docMgr = DocumentManager.deployed();
+	var docId = document.getElementById('documentId').value;
+
+	docMgr.getDocumentName.call(docId).then(function(name) {
+		console.log('document name:' + name);
+		document.getElementById('details').className = 'step-active';
+		document.getElementById('documentName').textContent = name;
+	});
 };
 
 // Added by Truffle bootstrap.
@@ -5705,4 +5969,4 @@ if (typeof web3 !== 'undefined') {
 }
 
 Pudding.setWeb3(window.web3);
-Pudding.load([Document], window);
+Pudding.load([DocumentManager], window);

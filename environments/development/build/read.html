@@ -10,9 +10,9 @@
 <body>
   <ul>
     <li><a href="/index.html">Home</a></li>
-    <li><a class="active" href="/publish.html">Publish</a></li>
+    <li><a href="/publish.html">Publish</a></li>
     <li><a href="/access.html">Access document</a></li>
-    <li><a href="/read.html">Read document</a></li>
+    <li><a class="active" href="/read.html">Read document</a></li>
     <li><a href="#" id="message" class="step-active"></a></li>
   </ul>
 
@@ -20,14 +20,18 @@
     Balance: <span id="balance"></span>
   </div>
   <div id="step1" class="step-active">
-    <h3>Step 1: Prepare your document</h3>
-    <div id="progressbar" style="display:inline-block"><div class="percent">0%</div></div> <button id="abort" onclick="abortRead()" class="">abort</button>
-    <div id="dropzone">Drop file here</div>
+    <h3>Step 1: Enter the id of the document you want to access</h3>
+    <div id="progressbar" style="display:inline-block"><div class="percent">0%</div></div> 
+    <input type="text" id="documentId" name="documentId" placeholder="34"> <button onclick="getDocumentDetails()">submit</button>
+    <div id="details">
+      <h3>Document details:</h3>
+      <label>name:</label><span id="documentName"></span>
+    </div>
+    <div id="requests">
+      
+    </div>
   </div>
-  <div id="step2" class="">
-    <h3 id="documentId"></h3>  
-  </div>
-
+  
   <script src="./app.js"></script>
   <script data-main="./buffer.js" src="./require.js"></script>
 </body>
