@@ -7,13 +7,12 @@ function handleAccessRequest(key){
 	var documentId = parseInt(document.getElementById('documentId').value);
 	exportKey(key.publicKey).then(function(strPublicKey){
 		return docMgr.requestDocument(documentId,strPublicKey, 0, {from:account}).then(function(tx){
-			console.log('transaction sent!' + tx);
 	        var filter = web3.eth.filter('latest');
 	        filter.watch(function(error, result) {
 	            var receipt = web3.eth.getTransactionReceipt(tx);
 	            // XXX should probably only wait max 2 events before failing XXX 
 	            if (receipt && receipt.transactionHash == tx) {
-	                docMgr.requestDocument.call(documentId, strPublicKey).then(function(requestId){
+	                docMgr.getLastRequestId.call(documentId).then(function(requestId){
 	                  var requests = localStorage.getItem('requests');
 	                  if(!requests || requests === '') {
 	                  	requests = [];
@@ -21,14 +20,15 @@ function handleAccessRequest(key){
 	                  	requests = JSON.parse(requests);
 	                  }
 	                  exportKey(key.privateKey).then(function(strPrivateKey){
-						requests.push({
-		                  	documentId: documentId,
-		                  	requestId: requestId - 1,
-		                  	privateKey: strPrivateKey
+							requests.push({
+			                  	documentId: documentId,
+			                  	requestId: requestId,
+			                  	privateKey: strPrivateKey,
+			                  	publicKey: strPublicKey
+		                  	});
+		                	localStorage.setItem('requests', JSON.stringify(requests));
+		                	location.reload();
 	                  	});
-	                	localStorage.setItem('requests', JSON.stringify(requests));
-	                	location.reload();
-	                  });
 	                });
 	                
 	                filter.stopWatching();
@@ -41,24 +41,24 @@ function handleAccessRequest(key){
 function listRequests() {
 	var requests = JSON.parse(localStorage.getItem('requests'));
 	if(requests) {
-		var html = '<table class="requestTable"><tr><th>document id</th><th>request id</th><th>status</th></tr>';
+		var html = '<table class="requestTable"><tr><th>document id</th><th>request id</th></tr>';
 		requests.forEach(function(request, index) {
-			html = html + '<tr onclick="openRequest(' + index + ')"><td>' + request.documentId + '</td><td>' + request.requestId + '</td><td>unknown</td></tr>';
+			html = html + '<tr onclick="openRequest(' + index + ')"><td>' + request.documentId + '</td><td>' + request.requestId + '</td></tr>';
 		});
 
 		html = html + '</table>';
-		console.log(html);
 		document.getElementById('requests').innerHTML = html;
 	}
 }
 
 function handleRequests(){
-	console.log('handling new requests');
-	for(var i = 1; i < 3; i++) {
-		handleOpenRequests(i);
-	}
+	DocumentManager.deployed().nbDocuments.call().then(function(nbDocuments) {
+		for(var i = 0; i < nbDocuments; i++) {
+			handleOpenRequests(i + 1);
+		}
 
-	setTimeout(handleRequests,2000);
+		setTimeout(handleRequests,2000);
+	});
 }
 
 function handleOpenRequests(documentId) {
@@ -72,45 +72,39 @@ function handleOpenRequests(documentId) {
 }
 
 function openRequest(index) {
-	console.log('try to open the document');
 	var request = JSON.parse(localStorage.getItem('requests'))[index];
 	var documentId = request.documentId;
 	var requestId = request.requestId 
 	var strPrivateKey = request.privateKey;
+	var strPublicKey = request.publicKey;
 	var docMgr = DocumentManager.deployed();
-	docMgr.getEncryptedKeyFromRequest.call(documentId, requestId).then(function(key) {
-		if(key === '') {
+	docMgr.getEncryptedKeyFromRequest.call(documentId, requestId).then(function(strKey) {
+		if(strKey === '') {
 			message('the request is either open or denied!');
 		}else {
-			var vector = crypto.getRandomValues(new Uint8Array(16));
+			console.log('symmetric key:' + strKey);
 			docMgr.getDocumentHash.call(documentId).then(function(hash) {
-				var strKey = localStorage.getItem(hash);
-				importAsymPrivateKey(strPrivateKey).then(function(privateKey){
-					
-					crypto.subtle.decrypt({name: "RSA-OAEP", iv: vector}, privateKey, convertStringToArrayBufferView(key)).then(
-				        function(result){
-				        	console.log('import sym key');
-				        	importSymKey(convertArrayBufferViewtoString(new Uint8Array(result))).then(function(symKey) {
-				        		ipfs.cat(hash, function(err, res) {
-								    if(err || !res) return console.error(err)
-								    if(res.readable) {
-								        // Returned as a stream
-								        var decryptPromise = crypto.subtle.decrypt({name: "AES-CBC", iv: vector}, symKey, reader.result);
 
-									    decryptPromise.then(
-									        function(result){
-									          message('decryption done!');
-									          console.log(result);
-									        }
-									    );
-								    }
-								})
-				        	});
-				        },
-				        function(e){
-				            message('error:' + e.name);
-				        }
-				    );
+				importAsymPrivateKey(strPrivateKey).then(function(privateKey){
+		        	importSymKey(strKey).then(function(symKey) {
+		        		readFile(hash, function(res) {
+					        // Returned as a string
+					        console.log(res);
+					        var txt = res + '';
+					        console.log(txt);
+						    decryptWithSymKey(symKey, txt).then(
+						        function(result){
+						          message('decryption done!');
+								  var docResult = document.getElementById('docResult');
+								  docResult.className = 'step-active';
+						          docResult.value = result;
+						        },
+						        function(err) {
+						        	console.log('error while decrypting ' + err.name);
+						        }
+						    );
+						});
+		        	});
 				});
 			});
 			
@@ -138,16 +132,23 @@ function checkAccess(documentId, requestId, hash, key) {
 	var docMgr = DocumentManager.deployed();
 	return docMgr.getRequestOwner.call(documentId, requestId).then(function(owner){
 		if(hasAccess(owner)) {
-			//TODO: encrypt key with publicKey, not hash!!
 			var symKey = localStorage.getItem(hash);
-			console.log('encrypt the sym key!' + symKey + ' for hash ' + hash);
 			if(symKey !== null) {
-				importAsymPublicKey(key).then(function(publicKey) {
-					encryptSymKey(publicKey, symKey).then(function(encKey) {
+				//importAsymPublicKey(key).then(function(publicKey) {
+					//console.log(symKey);
+					//encryptWithAsymKey(publicKey, symKey).then(function(encKey) {
 						console.log('access granted!');
-						docMgr.grantAccess(documentId,requestId,encKey, 0,{from: account});
-					});
-				});
+						docMgr.grantAccess(documentId,requestId,symKey, 0,{from: account}).then(function(tx) {
+							alert('you just granted access to document ' + documentId + ' request ' + requestId);
+						});
+					//},function(err){
+					//	console.log('error while encrypting the symmetric key');
+					//	console.log(err.name);
+					//});
+				//},
+				//function(err){
+				//	console.log(err.name);
+				//});
 			}
 		}else {
 			console.log('access denied!');

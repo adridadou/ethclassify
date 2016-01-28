@@ -3,7 +3,7 @@
     "index.html": "index.html",
     "publish.html": "publish.html",
     "access.html": "access.html",
-    "read.html": "read.html",
+    "test.html": "test.html",
     "app.js": [
       "javascripts/app.js",
       "javascripts/init.js",
@@ -12,7 +12,7 @@
       "javascripts/ipfsapi.js",
       "javascripts/ipfs.js",
       "javascripts/request.js",
-      "javascripts/document.js"
+      "javascripts/document.js"    
     ],
     "buffer.js" : [
       "javascripts/buffer.js"

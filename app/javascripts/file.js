@@ -39,20 +39,20 @@ function transitToStep2(){
 
 function encryptFile(symKey) {
   message('encrypting file ...');
-  var vector = crypto.getRandomValues(new Uint8Array(16));
-  var encryptPromise = crypto.subtle.encrypt({name: "AES-CBC", iv: vector}, symKey, reader.result);
-
-    encryptPromise.then(
-        function(result){
-          message('encryption done!');
-          uploadFile(result, function(hash) {
-            publishFile(hash,symKey);
-          });
-        }, 
-        function(e){
-            message(e.message);
-        }
-    );
+  var content = reader.result;
+  console.log(content);
+  var encryptPromise = encryptWithSymKey(symKey, content).then(
+      function(result){
+        message('encryption done!');
+        console.log('encrypted version:' + result);          
+        uploadFile(result, function(hash) {
+          publishFile(hash,symKey);
+        });
+      }, 
+      function(e){
+          message(e.message);
+      }
+  );
 
 }
 
@@ -65,7 +65,7 @@ function processFile(file){
     initReader(progress);
     // Read in the image file as a binary string.
     fileName = file.name;
-    reader.readAsArrayBuffer(file);
+    reader.readAsBinaryString(file);
     message('reading file ...');
     symKeyPromise = generateSymKey();
     document.getElementById('abort').className='button-active';
@@ -76,16 +76,19 @@ function publishFile(hash, symKey) {
   exportKey(symKey).then(function(value) {
     localStorage.setItem(hash, value);  
   });
+  var docMgr = DocumentManager.deployed();
     
-  console.log('publishing ' + fileName);
-  DocumentManager.deployed().newDocument(hash,fileName, 0,{from: account}).then(function(tx){
+  docMgr.newDocument(hash,fileName, 0,{from: account}).then(function(tx){
       var filter = web3.eth.filter('latest');
       filter.watch(function(error, result) {
           var receipt = web3.eth.getTransactionReceipt(tx);
           // XXX should probably only wait max 2 events before failing XXX 
           if (receipt && receipt.transactionHash == tx) {
-              DocumentManager.deployed().nbDocuments.call().then(function(docId){
+              docMgr.nbDocuments.call().then(function(docId){
                 document.getElementById('documentId').textContent = 'Done! your document id is: ' + docId;
+                document.getElementById('documentId').addEventListener("click", function(){
+                  showFileIn(hash,'showFile');
+                });
               });
               
               filter.stopWatching();
@@ -111,10 +114,6 @@ function handleDragOver(evt) {
 
 function errorHandler(evt) {
     message(evt.target.error.message);
-}
-
-function encryptPart(evt) {
-  var vector = crypto.getRandomValues(new Uint8Array(16)); 
 }
 
 function updateProgress(evt) {

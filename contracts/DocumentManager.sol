@@ -25,13 +25,12 @@ contract DocumentManager {
         owner = msg.sender;
     }
 
-    function newDocument(string hash, string name) returns (uint nb) {
+    function newDocument(string hash, string name) {
         nbDocuments++;
         documents[nbDocuments].owner = msg.sender;
         documents[nbDocuments].document = hash;
         documents[nbDocuments].name = name;
-
-        return nbDocuments;
+        documents[nbDocuments].nbRequests = 0;
     }
 
     function grantAccess(uint documentId, uint requestId, string encryptedKey) {
@@ -49,19 +48,20 @@ contract DocumentManager {
         }
     }
 
-    function requestDocument(uint documentId, string publicKey) returns (uint nb){
+    function requestDocument(uint documentId, string publicKey) {
         var document = documents[documentId];
-    	document.nbRequests++;
+        document.nbRequests++;
     	var request = document.requests[document.nbRequests];
-    	
     	request.status = Status.OPEN;
     	request.owner = msg.sender;
         request.key = publicKey;
-
-        return document.nbRequests;
     }
 
-    function getOpenRequestPublicKey(uint documentId, uint requestId) returns (string key) {
+    function getLastRequestId(uint documentId) returns (uint) {
+        return documents[documentId].nbRequests;
+    }
+
+    function getOpenRequestPublicKey(uint documentId, uint requestId) returns (string) {
         var request = documents[documentId].requests[requestId];
         if(request.status == Status.OPEN) {
             return request.key;
@@ -69,14 +69,7 @@ contract DocumentManager {
         return "";
     }
 
-    function getLastRequestId(uint documentId) returns (uint id) {
-        var document = documents[documentId];
-        if(document.owner == msg.sender){
-            return document.nbRequests;
-        }
-    }
-
-    function getRequestOwner(uint documentId, uint requestId) returns (address addr) {
+    function getRequestOwner(uint documentId, uint requestId) returns (address) {
         var document = documents[documentId];
         if(document.owner == msg.sender){
             return document.requests[requestId].owner;
@@ -91,7 +84,7 @@ contract DocumentManager {
         return documents[documentId].name;
     }
 
-    function getEncryptedKeyFromRequest(uint documentId, uint requestId) returns (string name) {
+    function getEncryptedKeyFromRequest(uint documentId, uint requestId) returns (string) {
         var request = documents[documentId].requests[requestId];
         if(request.status == Status.DONE) {
             return request.key;

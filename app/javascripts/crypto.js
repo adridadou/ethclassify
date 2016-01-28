@@ -1,3 +1,5 @@
+var encoder = new TextEncoder(),
+  decoder = new TextDecoder();
 
 function generateSymKey(){
 	return crypto.subtle.generateKey({name: "AES-CBC", length: 128}, true, ["encrypt", "decrypt"])
@@ -15,35 +17,33 @@ function generateAsymKey() {
     );
 }
 
-function encryptSymKey(publicKey, key) {
-    var vector = crypto.getRandomValues(new Uint8Array(16));
-    return crypto.subtle.encrypt({name: "RSA-OAEP", iv: vector}, publicKey, convertStringToArrayBufferView(key)).then(
-        function(result){
-            return convertArrayBufferViewtoString(new Uint8Array(result));
-        }
-    );
+function encryptWithSymKey(key, text) {
+    return crypto.subtle.encrypt({name: "AES-CBC", iv: vector}, key, convertStringToArrayBufferView(text)).then(convertArrayBufferViewtoString);
 }
 
-function convertArrayBufferViewtoString(buffer)
-{
-    var str = "";
-    for (var iii = 0; iii < buffer.byteLength; iii++) 
-    {
-        str += String.fromCharCode(buffer[iii]);
-    }
-
-    return str;
+function decryptWithSymKey(key, text) {
+    return crypto.subtle.decrypt({name: "AES-CBC", iv: vector}, key, convertStringToArrayBufferView(text)).then(convertArrayBufferViewtoString);
 }
 
-function convertStringToArrayBufferView(str)
-{
-    var bytes = new Uint8Array(str.length);
-    for (var iii = 0; iii < str.length; iii++) 
-    {
-        bytes[iii] = str.charCodeAt(iii);
-    }
+function encryptWithAsymKey(publicKey, text) {
+    return crypto.subtle.encrypt({name: "RSA-OAEP", iv: vector}, publicKey, convertStringToArrayBufferView(text)).then(convertArrayBufferViewtoString);
+}
 
-    return bytes;
+function decryptWithAsymKey(privateKey, text) {
+    return crypto.subtle.decrypt({name: "RSA-OAEP", iv: vector}, privateKey, convertStringToArrayBufferView(text)).then(convertArrayBufferViewtoString);
+}
+
+function convertArrayBufferViewtoString(buf) {
+  return String.fromCharCode.apply(null, new Uint16Array(buf));
+}
+
+function convertStringToArrayBufferView(str) {
+  var buf = new ArrayBuffer(str.length*2); // 2 bytes for each char
+  var bufView = new Uint16Array(buf);
+  for (var i=0, strLen=str.length; i < strLen; i++) {
+    bufView[i] = str.charCodeAt(i);
+  }
+  return buf;
 }
 
 function exportKey(key) {

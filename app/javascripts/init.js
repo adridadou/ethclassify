@@ -1,4 +1,4 @@
-var crypto,ipfs, Buffer, account;
+var crypto,ipfs, Buffer, account, vector;
 
 function initFileAPI() {
     if (!window.File || !window.FileReader || !window.FileList || !window.Blob) {
@@ -16,6 +16,10 @@ function initDropzone() {
 
 function initCrypto() {
     crypto = window.crypto || window.msCrypto;
+    vector = new Uint8Array(16);
+    for(var i = 0 ; i < 16 ; i++) {
+        vector[i] = i;
+    }
     if(!crypto.subtle) {
         alert('Crypto API is not available!');
     }   
