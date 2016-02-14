@@ -1,60 +1,22 @@
-<!DOCTYPE html>
 <html>
 <head>
-  <title>Ethclassify - Handle your classified documents on the blockchain</title>
-  <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
-  <link href="./app.css" rel='stylesheet' type='text/css'>
+  <meta charset="utf-8">
+  <title>Mocha Tests</title>
+  <link href="./test.css" rel="stylesheet" />
 </head>
 <body>
-  <ul>
-    <li><a href="/index.html">Home</a></li>
-    <li><a href="/publish.html">Publish</a></li>
-    <li><a class="active" href="/access.html">Access document</a></li>
-    <li><a href="#" id="message" class="step-active"></a></li>
-  </ul>
+  <div id="mocha"></div>
 
-  <div >
-    Balance: <span id="balance"></span>
-  </div>
-  <div>
-    <textarea id="input"></textarea>
-    <textarea id="output"></textarea>
+  <script src="./test_libs.js"></script>
 
-    <button onclick="encryptInput()">encrypt input</button>
-    <button onclick="decryptInput()">decrypt output</button>
-  </div>
-  
+  <script>mocha.setup('bdd')</script>
   <script src="./app.js"></script>
+  <script src="./test.js"></script>
   <script data-main="./buffer.js" src="./require.js"></script>
   <script>
-  var privateKey = null,
-    publicKey = null;
-  generateAsymKey().then(function(key) {
-    exportKey(key.privateKey).then(function(res){
-      privateKey = res;
-    });
-    exportKey(key.publicKey).then(function(res) {
-      publicKey = res;
-    });
-  });
-    function encryptInput(){
-      var text = document.getElementById('input').value;
-      importAsymPublicKey(publicKey).then(function(key){
-        encryptWithAsymKey(key,text).then(function(result){
-          document.getElementById('output').value = result;
-        });
-      });
-      
-    }
-
-    function decryptInput(){
-      var text = document.getElementById('output').value;
-      importAsymPrivateKey(privateKey).then(function(key){
-        decryptWithAsymKey(key,text).then(function(result){
-          document.getElementById('input').value = result;
-        });
-      });
-    }
+    mocha.checkLeaks();
+    mocha.globals(['jQuery']);
+    mocha.run();
   </script>
 </body>
 </html>

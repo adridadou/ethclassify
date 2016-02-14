@@ -1,0 +1,35 @@
+
+
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Ethclassify - Handle your classified documents on the blockchain</title>
+  <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+  <link href="./app.css" rel='stylesheet' type='text/css'>
+</head>
+<body>
+  <ul>
+    <li><a href="/index.html">Home</a></li>
+    <li><a class="active" href="/publish.html">Publish</a></li>
+    <li><a href="/access.html">Access document</a></li>
+    <li><a href="#" id="message" class="step-active"></a></li>
+  </ul>
+
+  <div >
+    Balance: <span id="balance"></span>
+  </div>
+  <div id="step1" class="step-active">
+    <h3>Step 1: Prepare your document</h3>
+    <div id="progressbar" style="display:inline-block"><div class="percent">0%</div></div> <button id="abort" onclick="abortRead()" class="">abort</button>
+    <div id="dropzone">Drop file here</div>
+  </div>
+  <div id="step2" class="">
+    <h3 id="documentId"></h3>
+  </div>
+
+  <div id="showFile"></div>
+
+  <script src="./app.js"></script>
+  <script data-main="./buffer.js" src="./require.js"></script>
+</body>
+</html>
