@@ -1,7 +1,7 @@
 class EthereumManager {
 	sync(smartContractCall) {
-		var deferred = Promise.defer();
-		return smartContractCall.then(tx => {
+		return new Promise((resolve, reject) => {
+			smartContractCall.then(tx => {
 	        var filter = web3.eth.filter('latest');
 	        filter.watch((error, result) => {
 	            var receipt = web3.eth.getTransactionReceipt(tx);
@@ -12,9 +12,8 @@ class EthereumManager {
 	            }
 
 	            //TODO: handle error case
-	            
+
 	        });
 	    });
-	    return deferred.promise;
 	}
 }
