@@ -6032,11 +6032,12 @@ var _createClass = (function () { function defineProperties(target, props) { for
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
 var RequestManager = (function () {
-	function RequestManager(crypto, documentManager) {
+	function RequestManager(crypto, documentManager, ethManager) {
 		_classCallCheck(this, RequestManager);
 
 		this.documentManager = documentManager;
 		this.crypt = crypto;
+		this.ethManager = ethManager;
 	}
 
 	_createClass(RequestManager, [{
@@ -6050,33 +6051,24 @@ var RequestManager = (function () {
 			var _this = this;
 
 			this.crypto.exportKey(key.publicKey).then(function (strPublicKey) {
-				return _this.documentManager.requestDocument(documentId, strPublicKey, 0, { from: account }).then(function (tx) {
-					var filter = web3.eth.filter('latest');
-					filter.watch(function (error, result) {
-						var receipt = web3.eth.getTransactionReceipt(tx);
-						// XXX should probably only wait max 2 events before failing XXX
-						if (receipt && receipt.transactionHash == tx) {
-							docMgr.getLastRequestId.call(documentId).then(function (requestId) {
-								var requests = localStorage.getItem('requests');
-								if (!requests || requests === '') {
-									requests = [];
-								} else {
-									requests = JSON.parse(requests);
-								}
-								exportKey(key.privateKey).then(function (strPrivateKey) {
-									requests.push({
-										documentId: documentId,
-										requestId: requestId,
-										privateKey: strPrivateKey,
-										publicKey: strPublicKey
-									});
-									localStorage.setItem('requests', JSON.stringify(requests));
-									location.reload();
-								});
-							});
-
-							filter.stopWatching();
+				return _this.ethManager.sync(_this.documentManager.requestDocument(documentId, strPublicKey, 0, { from: account })).then(function (tx) {
+					docMgr.getLastRequestId.call(documentId).then(function (requestId) {
+						var requests = localStorage.getItem('requests');
+						if (!requests || requests === '') {
+							requests = [];
+						} else {
+							requests = JSON.parse(requests);
 						}
+						_this.crypto.exportKey(key.privateKey).then(function (strPrivateKey) {
+							requests.push({
+								documentId: documentId,
+								requestId: requestId,
+								privateKey: strPrivateKey,
+								publicKey: strPublicKey
+							});
+							localStorage.setItem('requests', JSON.stringify(requests));
+							location.reload();
+						});
 					});
 				});
 			});

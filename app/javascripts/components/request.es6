@@ -1,7 +1,8 @@
 class RequestManager {
-	constructor(crypto:EthCrypto, documentManager: DocumentManager) {
+	constructor(crypto:EthCrypto, documentManager: DocumentManager, ethManager:EthereumManager) {
 		this.documentManager = documentManager;
 		this.crypt = crypto;
+		this.ethManager = ethManager;
 	}
 
 	requestAccess() {
@@ -10,34 +11,25 @@ class RequestManager {
 
 	handleAccessRequest(key, documentId:Number){
 		this.crypto.exportKey(key.publicKey).then(strPublicKey => {
-			return this.documentManager.requestDocument(documentId,strPublicKey, 0, {from:account}).then(tx => {
-		        var filter = web3.eth.filter('latest');
-		        filter.watch((error, result) => {
-		            var receipt = web3.eth.getTransactionReceipt(tx);
-		            // XXX should probably only wait max 2 events before failing XXX 
-		            if (receipt && receipt.transactionHash == tx) {
-		                docMgr.getLastRequestId.call(documentId).then(requestId => {
-		                  var requests = localStorage.getItem('requests');
-		                  if(!requests || requests === '') {
-		                  	requests = [];
-		                  }else {
-		                  	requests = JSON.parse(requests);
-		                  }
-		                  exportKey(key.privateKey).then(strPrivateKey => {
-								requests.push({
-				                  	documentId: documentId,
-				                  	requestId: requestId,
-				                  	privateKey: strPrivateKey,
-				                  	publicKey: strPublicKey
-			                  	});
-			                	localStorage.setItem('requests', JSON.stringify(requests));
-			                	location.reload();
-		                  	});
-		                });
-		                
-		                filter.stopWatching();
-		            }
-		        });
+			return this.ethManager.sync(this.documentManager.requestDocument(documentId,strPublicKey, 0, {from:account})).then(tx => {
+                docMgr.getLastRequestId.call(documentId).then(requestId => {
+                  var requests = localStorage.getItem('requests');
+                  if(!requests || requests === '') {
+                  	requests = [];
+                  }else {
+                  	requests = JSON.parse(requests);
+                  }
+                  this.crypto.exportKey(key.privateKey).then(strPrivateKey => {
+						requests.push({
+		                  	documentId: documentId,
+		                  	requestId: requestId,
+		                  	privateKey: strPrivateKey,
+		                  	publicKey: strPublicKey
+	                  	});
+	                	localStorage.setItem('requests', JSON.stringify(requests));
+	                	location.reload();
+                  	});
+                });
 		    });
 		});
 	}
